@@ -26775,6 +26775,8 @@ with pkgs;
 
   notejot = callPackage ../applications/misc/notejot { };
 
+  notion-kb = callPackage ../applications/misc/notion-kb { };
+
   notmuch-mutt = callPackage ../applications/networking/mailreaders/notmuch/mutt.nix { };
 
   muchsync = callPackage ../applications/networking/mailreaders/notmuch/muchsync.nix { };
