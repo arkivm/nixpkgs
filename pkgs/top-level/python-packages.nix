@@ -3381,6 +3381,8 @@ in {
 
   gudhi = callPackage ../development/python-modules/gudhi { };
 
+  guider = callPackage ../development/python-modules/guider { };
+
   gumath = callPackage ../development/python-modules/gumath { };
 
   gunicorn = callPackage ../development/python-modules/gunicorn { };
