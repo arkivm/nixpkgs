@@ -20,7 +20,19 @@
 , stdenv
 , enableWayland ? stdenv.isLinux
 , wayland
+, xcbuild
 , xorg
+# Apple frameworks
+, AppKit
+, ApplicationServices
+, Carbon
+, CoreFoundation
+, CoreGraphics
+, CoreVideo
+, Foundation
+, OpenGL
+, QuartzCore
+, Security
 }:
 rustPlatform.buildRustPackage rec {
   pname = "neovide";
@@ -33,7 +45,7 @@ rustPlatform.buildRustPackage rec {
     sha256 = "sha256-kcP0WSk3quTaWCGQYN4zYlDQ9jhx/Vu6AamSLGFszwQ=";
   };
 
-  cargoSha256 = "sha256-TQEhz9FtvIb/6Qtyz018dPle0+nub1oMZMFtKAqYcoI=";
+  cargoSha256 = "12pbzrv50hw1hnmklchjqa0kiqgrfz66ii71rldhnf0f7n56rfwj";
 
   SKIA_SOURCE_DIR =
     let
@@ -41,8 +53,8 @@ rustPlatform.buildRustPackage rec {
         owner = "rust-skia";
         repo = "skia";
         # see rust-skia:skia-bindings/Cargo.toml#package.metadata skia
-        rev = "m91-0.39.4";
-        sha256 = "sha256-ovlR1vEZaQqawwth/UYVUSjFu+kTsywRpRClBaE1CEA=";
+        rev = "m94-0.42.1";
+        sha256 = "17nfpngibqaiflill5v36civpw5mmjif6ajklcm0mwb9z8rla8l3";
       };
       # The externals for skia are taken from skia/DEPS
       externals = lib.mapAttrs (n: v: fetchgit v) (lib.importJSON ./skia-externals.json);
@@ -73,6 +85,8 @@ rustPlatform.buildRustPackage rec {
     makeWrapper
     python2 # skia-bindings
     llvmPackages.clang # skia
+  ] ++ lib.optionals stdenv.isDarwin [
+    xcbuild
   ];
 
   # All tests passes but at the end cargo prints for unknown reason:
@@ -96,6 +110,17 @@ rustPlatform.buildRustPackage rec {
         }))
       ];
     }))
+  ] ++ lib.optionals stdenv.isDarwin [
+    AppKit
+    ApplicationServices
+    Carbon
+    CoreFoundation
+    CoreGraphics
+    CoreVideo
+    Foundation
+    OpenGL
+    QuartzCore
+    #Security
   ];
 
   postFixup = let
