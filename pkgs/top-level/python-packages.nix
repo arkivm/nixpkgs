@@ -2464,6 +2464,8 @@ in {
 
   emoji = callPackage ../development/python-modules/emoji { };
 
+  empty-files = callPackage ../development/python-modules/empty-files { };
+
   emulated-roku = callPackage ../development/python-modules/emulated-roku { };
 
   enaml = callPackage ../development/python-modules/enaml { };
@@ -7339,6 +7341,8 @@ in {
   pytest-annotate = callPackage ../development/python-modules/pytest-annotate { };
 
   pytest-ansible = callPackage ../development/python-modules/pytest-ansible { };
+
+  pytest-approvaltests = callPackage ../development/python-modules/pytest-approvaltests { };
 
   pytest-arraydiff = callPackage ../development/python-modules/pytest-arraydiff { };
 
