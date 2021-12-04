@@ -1,4 +1,4 @@
-{ lib, stdenv, fetchurl, kernel }:
+{ lib, stdenv, fetchpatch, fetchurl, kernel }:
 
 stdenv.mkDerivation rec {
   pname = "lttng-modules-${kernel.version}";
@@ -8,6 +8,15 @@ stdenv.mkDerivation rec {
     url = "https://lttng.org/files/lttng-modules/lttng-modules-${version}.tar.bz2";
     sha256 = "0mikc3fdjd0w6rrcyksjzmv0czvgba6yk8dfmz4a3cr8s4y2pgsy";
   };
+
+  patches = [
+  ] ++
+  lib.optional (lib.versionAtLeast kernel.version "5.15")
+  # Should be removed once a new version is released
+    (fetchpatch {
+      url = "https://github.com/lttng/lttng-modules/commit/ffcc873470121ef1ebb110df3d9038a38d9cb7cb.patch";
+      sha256 = "sha256-FSNVRujq/f+bl2CHlXoPpBnq65i2K+XG2+O1AnplJ2o=";
+    });
 
   buildInputs = kernel.moduleBuildDependencies;
 
