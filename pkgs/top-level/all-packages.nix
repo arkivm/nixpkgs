@@ -13681,6 +13681,7 @@ with pkgs;
     # https://github.com/NixOS/nixpkgs/pull/31017#issuecomment-343574769
     stdenv = if stdenv.isDarwin then stdenv else gcc7Stdenv;
     inherit (darwin.apple_sdk.frameworks) CoreFoundation;
+    inherit (darwin) sigtool;
   };
   racket_7_9 = callPackage ../development/interpreters/racket/racket_7_9.nix {
     stdenv = if stdenv.isDarwin then stdenv else gcc7Stdenv;

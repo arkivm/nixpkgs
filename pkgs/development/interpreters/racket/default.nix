@@ -16,6 +16,7 @@
 , CoreFoundation
 , gsettings-desktop-schemas
 , wrapGAppsHook
+, sigtool
 }:
 
 let
@@ -67,7 +68,7 @@ stdenv.mkDerivation rec {
     (lib.optionalString stdenv.isDarwin "-framework CoreFoundation")
   ];
 
-  nativeBuildInputs = [ cacert wrapGAppsHook ];
+  nativeBuildInputs = [ cacert wrapGAppsHook sigtool ];
 
   buildInputs = [ fontconfig libffi libtool sqlite gsettings-desktop-schemas gtk3 ]
     ++ lib.optionals stdenv.isDarwin [ libiconv CoreFoundation ncurses ];
@@ -89,6 +90,9 @@ stdenv.mkDerivation rec {
         --replace /bin/rm ${coreutils}/bin/rm \
         --replace /bin/true ${coreutils}/bin/true
     done
+    substituteInPlace src/cs/c/configure --replace "RESTORE_SIGNATURE=\"codesign" "RESTORE_SIGNATURE=\"codesign -f"
+    substituteInPlace src/cs/c/configure --replace '"codesign ' '"${sigtool}/bin/codesign '
+    substituteInPlace src/cs/c/Makefile.in --replace "\$(STRIP_SIGNATURE) " "#\$(STRIP_SIGNATURE) "
     mkdir src/build
     cd src/build
 
@@ -101,6 +105,8 @@ stdenv.mkDerivation rec {
                    ++ lib.optional stdenv.isDarwin [ "--enable-xonx" ];
 
   configureScript = "../configure";
+
+  CFLAGS = "-DTARGET_OS_IPHONE=0";
 
   enableParallelBuilding = false;
 
@@ -118,6 +124,8 @@ stdenv.mkDerivation rec {
     homepage = "https://racket-lang.org/";
     license = with licenses; [ asl20 /* or */ mit ];
     maintainers = with maintainers; [ kkallio henrytill vrthra ];
-    platforms = [ "x86_64-darwin" "x86_64-linux" "aarch64-linux" ];
+    #platforms = [ "x86_64-darwin" "x86_64-linux" "aarch64-linux" ];
+
+    platforms = platforms.unix;
   };
 }
