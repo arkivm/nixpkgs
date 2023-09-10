@@ -2408,6 +2408,8 @@ with pkgs;
 
   rpcs3 = libsForQt5.callPackage ../applications/emulators/rpcs3 { };
 
+  rust-keylime = callPackage ../tools/security/rust-keylime { };
+
   ruffle = callPackage ../applications/emulators/ruffle { };
 
   ryujinx = callPackage ../applications/emulators/ryujinx { };
