@@ -37,6 +37,7 @@ in
         description = mdDoc ''
             Configuration options for keylime agent
         '';
+        default = {};
         type = types.submodule {
           freeformType = format.type;
           options.agent = {
