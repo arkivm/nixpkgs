@@ -44,6 +44,10 @@ python3Packages.buildPythonApplication rec {
     typing-extensions
   ]);
 
+  patchPhase = ''
+    substituteInPlace keylime/config.py --replace "libefivar.so.1" "${efivar.out}/lib/libefivar.so.1"
+  '';
+
   postInstall = ''
     install -D keylime.conf $out/etc/keylime.conf
     install -D config/verifier.conf $out/etc/config/verifier.conf
@@ -51,23 +55,27 @@ python3Packages.buildPythonApplication rec {
     install -D config/registrar.conf $out/etc/config/registrar.conf
     install -D config/ca.conf $out/etc/config/ca.conf
     install -D config/logging.conf $out/etc/config/logging.conf
-
-    # for enabling tests
-    substituteInPlace $out/lib/${python3.libPrefix}/site-packages/keylime/config.py --replace "libefivar.so.1" "${efivar.out}/lib/libefivar.so.1"
   '';
 
-  # TODO: Enable tests
-  doCheck = false;
+  doCheck = true;
 
-  # TODO: tests are still broken
   preCheck = ''
-    export KEYLIME_CONFIG=$out/etc/keylime.conf
+    export KEYLIME_VERIFIER_CONFIG=$out/etc/config/verifier.conf
+    export KEYLIME_REGISTRAR_CONFIG=$out/etc/config/registrar.conf
+    export KEYLIME_CA_CONFIG=$out/etc/config/ca.conf
+    export KEYLIME_TENANT_CONFIG=$out/etc/config/tenant.conf
+    export KEYLIME_LOGGING_CONFIG=$out/etc/config/logging.conf
+    export KEYLIME_DIR=/tmp/keylime-var/
   '';
 
-  checkInputs = [
+  nativeCheckInputs = [
     tpm2-tools
-    efivar
-  ];
+    libssl
+  ] ++ (with python3.pkgs; [
+    pytestCheckHook
+    tox
+    mypy
+  ]);
 
   meta = with lib; {
     description = "A CNCF Project to Bootstrap & Maintain Trust on the Edge/Cloud and IoT";
