@@ -267,6 +267,8 @@ in
 
   config = mkIf cfg.enable (mkMerge [
     {
+      environment.etc."keylime/logging.conf".source = "${pkgs.keylime}/etc/config/logging.conf";
+      environment.etc."keylime/ca.conf".source = "${pkgs.keylime}/etc/config/ca.conf";
       environment.etc."keylime/tenant.conf".source = "${pkgs.keylime}/etc/config/tenant.conf";
 
       users.users.keylime = {
@@ -281,7 +283,6 @@ in
     (mkIf cfg.registrar.enable {
       #environment.etc."keylime/registrar.conf".source = "${pkgs.keylime}/etc/config/registrar.conf";
       environment.etc."keylime/registrar.conf".source = configFileRegistrar;#"${pkgs.keylime}/etc/config/registrar.conf";
-      environment.etc."keylime/logging.conf".source = "${pkgs.keylime}/etc/config/logging.conf";
 
       systemd.services."keylime-registrar" = {
         description = "Keylime registrar service";
@@ -300,8 +301,6 @@ in
 
     (mkIf cfg.verifier.enable {
       environment.etc."keylime/verifier.conf".source = "${pkgs.keylime}/etc/config/verifier.conf";
-      environment.etc."keylime/ca.conf".source = "${pkgs.keylime}/etc/config/ca.conf";
-      environment.etc."keylime/logging.conf".source = "${pkgs.keylime}/etc/config/logging.conf";
 
       systemd.services."keylime-verifier" = {
         description = "Keylime verifier service";
