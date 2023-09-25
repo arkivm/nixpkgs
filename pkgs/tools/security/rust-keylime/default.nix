@@ -46,6 +46,8 @@ rustPlatform.buildRustPackage rec {
     python3
   ];
 
+  doCheck = true;
+
   postPatch = ''
    patchShebangs keylime-agent/tests/actions/*.py
    patchShebangs keylime-agent/tests/unzipped/*.py
